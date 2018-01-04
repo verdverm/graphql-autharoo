@@ -2,8 +2,10 @@
 
 [![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/verdverm/graphql-autharoo)
 [![Travis](https://img.shields.io/travis/rust-lang/rust.svg)](https://github.com/verdverm/graphql-autharoo)
+[![Codecov](https://img.shields.io/codecov/c/github/codecov/example-python.svg)](https://github.com/verdverm/graphql-autharoo)
 [![npm](https://img.shields.io/npm/dw/localeval.svg)](https://github.com/verdverm/graphql-autharoo)
 [![Sourcegraph for Repo Reference Count](https://img.shields.io/sourcegraph/rrc/github.com/gorilla/mux.svg)](https://github.com/verdverm/graphql-autharoo)
+
 [![GitHub issues by-label](https://img.shields.io/github/issues/badges/shields/help%20wanted.svg)](https://github.com/verdverm/graphql-autharoo/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![GitHub issues by-label](https://img.shields.io/github/issues/badges/shields/good%20first%20issue.svg)](https://github.com/verdverm/graphql-autharoo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 
