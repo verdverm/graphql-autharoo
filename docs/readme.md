@@ -4,12 +4,43 @@ Welcome to the `graphql-autharoo` documentation.
 
 Please let us know if anything is unclear or needs expanding upon. Thank You!
 
+### Scoping Blocks
+
+Both of the auth helpers accept a list of scoping blocks.
+As scoping block is an object:
+
+```
+{
+  requiredScopes: ...,
+  providedScopes: ...,
+  callback: (sources, args, context, info) => ...
+}
+```
+
+`requiredScopes` is the list of permissions required for access to this callback.
+
+`providedScopes` is the list of permissions provided for accessing this callback.
+
+`callback` is the function to execute if access is granted by the validator.
+
+All three fields accept functions with the same signature.
+Generally, the requiredScopes will be a list that corresponds
+to a few permissions specific to the resolver.
+The providedScopes is function returning a list of permissions
+given the context of the request  (or list of lists if batching).
+The callback is always a function and its return should
+match the GraphQL response type (unless you do pre/post ETL).
+With `authSwitch`, the providedScopes may be omitted and
+the helper will look for `context.auth.scopes` for the permissions.
+Specifics to each auth helper are described further in their respective documentation.
+
 ### authSwitch
 
 `authSwitch` is an authorization multiplexer.
-It accepts a list of scopings (required,provided,success) callbacks.
+It accepts a list of scoping blocks `[{requiredScopes, providedScopes, callback}, ...]`
+with which to process the graphql request.
 If the requesting users passes the requirements for a
-scoping block, the entire request is delegate to
+scoping block, the entire resolver request is delegated to
 the associated callback.
 
 [Learn more about authSwitch](./switch.md).
@@ -17,11 +48,13 @@ the associated callback.
 ### authBatching
 
 `authBatching` is an authorization filter.
-`authSwitch` is an authorization multiplexer.
-It is designed for batch processing and resolving situations.
-It too accepts a list of scopings (required,provided,success) callbacks.
-The difference is that it applies the scopings
+It is designed for batch processing and datum resolving situations.
+It too accepts the same style list of scoping blocks.
+The difference is that it applies the scoping blocks
 on an object-by-object level to each element of the batch source.
+That is, each element of the incoming batch sources is independently
+authorized, filtered, fulfilled, and reassembled on your behalf.
+
 
 [Learn more about authBatching](./batching.md).
 
@@ -31,9 +64,6 @@ Validators are responsible for comparing and approving permissions.
 The accept two lists and return a truthy or falsey value.
 
 [Learn more about validators](./validators.md).
-
-
-### Processing Walkthrough
 
 
 ### Permission Scheme
@@ -58,3 +88,12 @@ So `[ "admin:[update,delete]", "user[,/self]:[update,delete]" ]` will become
 As the `requiredScopes`, `providedScopes`, and `validator` callbacks
 can all be customized, you are free to dream up any permission scheme.
 You can even use objects instead of strings (a great candidate PR!).
+
+
+
+### Processing Walkthrough
+
+
+
+
+

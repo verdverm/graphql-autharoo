@@ -1,12 +1,12 @@
 {
   "name": "graphql-autharoo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Authorization helpers for graphql resolvers.",
   "homepage": "https://github.com/verdverm/graphql-autharoo",
   "repository": "git@github.com:verdverm/graphql-autharoo",
   "bugs": "https://github.com/verdverm/graphql-autharoo/issues",
   "author": "Tony Worm <verdverm@gmail.com>",
-  "license": "BSD-3",
+  "license": "BSD-3-Clause",
   "keywords": [
     "graphql",
     "apollo",
@@ -21,8 +21,14 @@
     "resolvers"
   ],
   "scripts": {
+    "preversion": "npm run ci",
+    "prepublish": "npm run build",
+    "format": "prettier 'src/**/*.js' 'examples/**/*.js' --write --print-width 80 --tab-width 2 --single-quote --trailing-comma all",
+    "lint": "eslint 'src/**/*.js'",
     "test": "jest",
-    "lint": "eslint --fix --ext js src"
+    "test-watch": "jest --watch",
+    "ci": "npm run format && git diff --exit-code && npm run lint && npm test",
+    "build": "rm -rf lib && babel src --out-dir lib"
   },
   "main": "src/index.js",
   "files": [
@@ -36,18 +42,6 @@
     "src/switch.js",
     "src/batching.js"
   ],
-
-  "scripts": {
-    "preversion": "npm run ci",
-    "prepublish": "npm run build",
-    "format": "prettier 'src/**/*.js' 'examples/**/*.js' --write --print-width 80 --tab-width 2 --single-quote --trailing-comma all",
-    "lint": "eslint 'src/**/*.js'",
-    "test": "jest",
-    "test-watch": "jest --watch",
-    "ci": "npm run format && git diff --exit-code && npm run lint && npm test",
-    "build": "rm -rf lib && babel src --out-dir lib"
-  },
-
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
