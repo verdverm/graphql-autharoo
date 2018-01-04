@@ -1,0 +1,97 @@
+{
+  "name": "graphql-autharoo",
+  "version": "1.0.0",
+  "description": "Authorization helpers for graphql resolvers.",
+  "homepage": "https://github.com/verdverm/graphql-autharoo",
+  "repository": "git@github.com:verdverm/graphql-autharoo",
+  "bugs": "https://github.com/verdverm/graphql-autharoo/issues",
+  "author": "Tony Worm <verdverm@gmail.com>",
+  "license": "BSD-3",
+  "keywords": [
+    "graphql",
+    "apollo",
+    "apollo-server",
+    "auth",
+    "authentication",
+    "authorization",
+    "permissions",
+    "batch",
+    "batching",
+    "resolve",
+    "resolvers"
+  ],
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint --fix --ext js src"
+  },
+  "main": "src/index.js",
+  "files": [
+    "package.json",
+    "README.md",
+    "LICENSE",
+    "src/index.js",
+    "src/errors.js",
+    "src/brackets.js",
+    "src/validators.js",
+    "src/switch.js",
+    "src/batching.js"
+  ],
+
+  "scripts": {
+    "preversion": "npm run ci",
+    "prepublish": "npm run build",
+    "format": "prettier 'src/**/*.js' 'examples/**/*.js' --write --print-width 80 --tab-width 2 --single-quote --trailing-comma all",
+    "lint": "eslint 'src/**/*.js'",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "ci": "npm run format && git diff --exit-code && npm run lint && npm test",
+    "build": "rm -rf lib && babel src --out-dir lib"
+  },
+
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.1.2",
+    "babel-jest": "^22.0.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.14.0",
+    "jest": "^22.0.4",
+    "prettier": "^1.9.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": 4
+          }
+        }
+      ]
+    ]
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "env": {
+      "node": true,
+      "es6": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ]
+  },
+  "jest": {
+    "verbose": true,
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverage": true,
+    "coverageReporters": [
+      "text",
+      "text-summary"
+    ]
+  }
+}
