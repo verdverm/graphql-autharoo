@@ -96,4 +96,16 @@ You can even use objects instead of strings (a great candidate PR!).
 
 
 
+### Nesting
+
+You can also nest `authSwitch` and `authBatch` in either order.
+This enables you to expedite or shortcut given the right circumstances.
+From the outer helpers viewpoint,
+the nested helper will behave like a scoping stage.
+From the nested helpers viewpoint, there is no outer helper,
+it is ignorant of this fact.
+
+There are some examples the test files
+and on the `auth-upgrades` branch of the
+[Apollo-Universal-Starter-Kit](https://github.com/sysgears/apollo-universal-starter-kit/tree/auth-upgrades) repository.
 

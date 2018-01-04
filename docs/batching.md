@@ -37,4 +37,53 @@ For each stage in the chain:
 - Any source item making it through all of the stages will get the `AuthorizationError`
 - Finally, return the final results aligned to the original source order
 
+## Spec
+
+signature: `authBatching(scopeChain, options)`
+
+returns: `async function(sources, args, context, info)`
+
+```
+const resolverChain = [
+  {
+    // Admins only
+    requiredScopes: () => ['admin:view'],
+    // a reusable scope extractor, needs to return an array of arrays of strings (permission list per source element)
+    providedScopes: adminProvided,   
+    // a reusable callback that returns all matches for sources
+    callback: allCallback            
+  },
+  {
+    // Group members only
+    requiredScopes: () => ['group:member'],
+    // a reusable scope extractor for membership
+    providedScopes: memberProvided,  
+    // we can almost always return everything because the filtering already happened
+    callback: allCallback            
+  },
+  {
+    // User only view
+    requiredScopes: () => ['user:view'],
+    // a reusable scope extractor for ids
+    providedScopes: idProvided,
+    // again, return something for every source, what that is is up to you
+    callback: allCallback
+  },
+  {
+    // empty brackets mean pass everything, unless unauthenticated
+    requiredScopes: () => [],        
+    // returns and array of empty arrays the same length as sources
+    providedScopes: nothingProvided, 
+    // A reusable callback which returns only things with public settings
+    callback: publicCallback         
+  }
+
+  // Any element of the sources which makes it this far will
+  // receive the 'AuthorizationError'
+]
+
+```
+
+## Examples
+
 

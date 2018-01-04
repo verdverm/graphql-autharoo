@@ -59,8 +59,13 @@ const resolverChain = [
 
   // Some admin only area
   {
+    // square bracket interpolation to ease permission writing
     requiredScopes: ['admin:[list,view]'],
-    // providedScopes: by default looks for a 'context.auth.scopes' array of strings.
+    providedScopes: (sources, args, context, info) => {
+      // need to return an array of strings
+      return context.auth.userScopes.find(args.id)
+    },
+
     callback: () => {
       return "success admin"
     }
@@ -68,11 +73,12 @@ const resolverChain = [
 
   // A second scoping for user viewing
   {
-    requiredScopes: ['user:list' 'user:view'],
-    providedScopes: (sources, args, context, info) => {
-      // need to return an array of strings
-      return context.auth.userScopes.find(args.id)
-    },
+    // feel free to get creative with your permissioning format.
+    // It's just string equality under the hood.
+    requiredScopes: ['admin:[list,view]', 'user/self/[profile,setting]:[view,update,delete]'],
+
+    // providedScopes: by default looks at 'context.auth.scopes'
+    // for an array of string permissions.
     callback: () => {
       return "success user"
     }
@@ -80,14 +86,18 @@ const resolverChain = [
 
   // Default
   {
+    // The bottomless pit...
+    // empty brackets will validate against (almost) anything.
     requiredScopes: [],
     callback: () => {
       return "success default"
     }
   }
 
-  // If a request falls through, it will get an 'AuthorizationError'
-  // The empty bracket clause means that will never happen
+  // If a request falls through all of the stages... 
+  // it is a form of denial and will get assigned 'AuthorizationError'
+  // An empty bracket clause means that should never happen.
+  // (You can do some things with the auth batch helper as well as nested auth helpers)
 ])
 
 const options = {
@@ -120,32 +130,40 @@ const resolverChain = [
   {
     // Admins only
     requiredScopes: () => ['admin:view'],
+
     // a reusable scope extractor, needs to return an array of arrays of strings (permission list per source element)
     providedScopes: adminProvided,   
+    
     // a reusable callback that returns all matches for sources
     callback: allCallback            
   },
   {
     // Group members only
     requiredScopes: () => ['group:member'],
+    
     // a reusable scope extractor for membership
     providedScopes: memberProvided,  
+    
     // we can almost always return everything because the filtering already happened
     callback: allCallback            
   },
   {
     // User only view
     requiredScopes: () => ['user:view'],
+
     // a reusable scope extractor for ids
     providedScopes: idProvided,
+    
     // again, return something for every source, what that is is up to you
     callback: allCallback
   },
   {
     // empty brackets mean pass everything, unless unauthenticated
     requiredScopes: () => [],        
+    
     // returns and array of empty arrays the same length as sources
     providedScopes: nothingProvided, 
+    
     // A reusable callback which returns only things with public settings
     callback: publicCallback         
   }
@@ -156,6 +174,79 @@ const resolverChain = [
 
 ```
 
+
+### Usage
+
+```
+import { GraphQLObjectType, GraphQLString } from 'graphql';
+import { createBatchResolver } from 'graphql-resolve-batch';
+import { authSwitch, authBatching } from 'graphql-autharoo';
+
+const UserType = new GraphQLObjectType({
+  // ...
+});
+
+const MutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    update: {
+      type: UserType,
+      resolve: authSwitch([
+        {
+          requiredScopes: ['admin:update', 'user:self:update']
+          callback: (source, args, context, info) => {
+            ...
+            // put your normal batch resolving code in the callbacks
+            ...
+          }
+        }
+
+        // There is only one scoping block in this example.
+        // Any requests making it this far will be denied access.
+      ],{
+        // ... Optionally, specify any options you need to send to graphql-autharoo or the validators
+      })
+    },
+  },
+});
+
+
+const QueryType = new GraphQLObjectType({
+  name: 'Query',
+  fields: {
+    user: {
+      type: UserType,
+      resolve: createBatchResolver(async (sources, args, context, info) => {
+
+        // The authBatching helper goes inside of the batch resolver
+        // We first set it up with the helper function call
+        // and then execute it with the values coming in from the batch resolver.
+
+        // Setup
+        const scopeBlocks = [
+          ...
+          // put your normal batch resolving code in the callbacks
+          ...
+        ]
+        const options = {...}
+
+        // Initialization
+        const authResolver = authBatching(scopeBlocks, options)
+
+        // any any-procssing here
+
+        // Actual processing
+        const results = await authResolver(sources, args, context, info)
+
+        // any post-procssing here
+
+        // like it says
+        return results
+      }),
+    },
+  },
+});
+```
 
 
 
