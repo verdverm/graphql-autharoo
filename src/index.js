@@ -3,11 +3,4 @@ import { authBatching } from './batching';
 import { expandBrackets } from './brackets';
 import { validateScope } from './validators';
 
-export {
-  expandBrackets,
-  validateScope,
-  authSwitch,
-  authBatching,
-};
-
-
+export { expandBrackets, validateScope, authSwitch, authBatching };
