@@ -1,9 +1,13 @@
-import authSwitch from './switch';
-import authBatching from './batching';
+import { authSwitch } from './switch';
+import { authBatching } from './batching';
+import { expandBrackets } from './brackets';
 import { validateScope } from './validators';
 
-export default {
+export {
+  expandBrackets,
   validateScope,
   authSwitch,
   authBatching,
 };
+
+
