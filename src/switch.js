@@ -26,13 +26,15 @@ const authSwitch = (scopingList, options) => {
       return new AuthorizationError('Not Authenticated!');
 
     // add the flattened path
-    let path = [];
-    let ipath = info.path;
-    while (ipath) {
-      path.push(ipath.key);
-      ipath = ipath.prev;
+    if (info) {
+      let path = [];
+      let ipath = info.path;
+      while (ipath) {
+        path.push(ipath.key);
+        ipath = ipath.prev;
+      }
+      context.auth.path = path;
     }
-    context.auth.path = path;
 
     // loop ever scoping elements
     let pass = false;
