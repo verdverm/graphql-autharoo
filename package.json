@@ -30,17 +30,17 @@
     "ci": "npm run format && git diff --exit-code && npm run lint && npm test",
     "build": "rm -rf lib && babel src --out-dir lib"
   },
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "files": [
     "package.json",
     "README.md",
     "LICENSE",
-    "src/index.js",
-    "src/errors.js",
-    "src/brackets.js",
-    "src/validators.js",
-    "src/switch.js",
-    "src/batching.js"
+    "lib/index.js",
+    "lib/errors.js",
+    "lib/brackets.js",
+    "lib/validators.js",
+    "lib/switch.js",
+    "lib/batching.js"
   ],
   "dependencies": {},
   "devDependencies": {
