@@ -1,6 +1,6 @@
 {
   "name": "graphql-autharoo",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Authorization helpers for graphql resolvers.",
   "homepage": "https://github.com/verdverm/graphql-autharoo",
   "repository": "git@github.com:verdverm/graphql-autharoo",
